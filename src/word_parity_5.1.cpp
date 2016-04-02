@@ -4,11 +4,11 @@
 #include <random>
 #include <chrono>
 
-static bool has_odd_parity(uint64_t val);
-
-bool has_odd_parity(uint64_t val) {
+template <typename T>
+static bool has_odd_parity(T val) {
     bool odd = false;
-    for (int i = 0; i < 64; i++) {
+    constexpr int size = sizeof(T) * 8;
+    for (int i = 0; i < size; i++) {
         if ((val & 1) == 1) {
             odd = !odd;
         }
@@ -20,12 +20,22 @@ bool has_odd_parity(uint64_t val) {
 namespace Parity
 {
     int compute_parity(const std::vector<uint64_t>& words) {
+        // Build lookup table
+        std::vector<bool> lut;
+        constexpr int chunk_size_bits = 16;
+        unsigned int lut_range = (1 << chunk_size_bits) - 1;
+        for (unsigned int i = 0; i <= lut_range; i++) {
+            lut.push_back(has_odd_parity(i));
+        }   
+        
         bool odd_parity = false;
         // Count the bits in each word
         for (auto& word : words) {
-            if (has_odd_parity(word)) {
-                odd_parity = !odd_parity;
-            } 
+            for (auto offset = 0; offset < 64; offset+= chunk_size_bits) {
+                if (lut.at((word >> offset) & lut_range)) {
+                    odd_parity = !odd_parity;
+                }
+            }
         }
         
         return odd_parity ? 1 : 0;
