@@ -7,8 +7,6 @@ OBJECTS=$(SOURCES:.cpp=.o)
 OBJECTFILES=$(OBJECTS:%=build/%)
 SOURCEFILES=$(SOURCES:%=src/%)
 
-$(info SOURCES is $(SOURCES))
-
 all: build $(SOURCEFILES) $(EXECUTABLE)
 
 -include $(OBJECTFILES:.o=.d)
