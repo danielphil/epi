@@ -1,4 +1,4 @@
-#define MEH3
-#include <string>
-
-static const char* blah = "blahblah";
+namespace Parity {
+    int compute_parity(const std::vector<uint64_t>& words);
+    void test_parity();    
+}

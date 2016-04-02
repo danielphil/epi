@@ -1,5 +1,5 @@
 CC=clang++
-CFLAGS=-c -Weverything -MMD -MP
+CFLAGS=-c -Weverything -MMD -MP -std=c++14 -Wno-c++98-compat -Wno-c++11-compat-pedantic -O3
 LDFLAGS=
 SOURCES=$(subst src/,,$(wildcard src/*.cpp))
 EXECUTABLE=build/test
