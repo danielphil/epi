@@ -1,6 +1,8 @@
+#pragma once
+
 #define TEST_EQ(expected, actual) \
     Test::CheckEqual((expected), (actual), #actual, __FILE__, __LINE__);
-
+    
 namespace Test
 {   
     void PrintFail(const std::string& expected, const std::string& actual, const std::string& check, const std::string& filename, int line);

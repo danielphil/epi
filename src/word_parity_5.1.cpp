@@ -46,6 +46,7 @@ namespace Parity
         TEST_EQ(0, compute_parity({0b10001000}));
         
         // Deterministic random numbers please- just need some test data
+#ifdef PERFTEST
         std::mt19937 gen(0);
         std::uniform_int_distribution<uint64_t> dis;
         
@@ -57,5 +58,6 @@ namespace Parity
         TEST_EQ(0, compute_parity(test_data));
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
         std::cout << "Time taken: " << duration.count() << "ms" << std::endl;
+#endif
     }
 }
