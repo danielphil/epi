@@ -5,26 +5,31 @@
 namespace Flag
 {
     std::vector<int> Partition(const std::vector<int>& input_elements, unsigned int partition_index) {
-        std::vector<int> result(input_elements.size());
+        std::vector<int> result = input_elements;
         
-        unsigned int lower_pos = 0;
-        unsigned int upper_pos = static_cast<unsigned int>(input_elements.size()) - 1;
+        unsigned int current = 0;
+        unsigned int write_low = 0;
+        unsigned int write_high = static_cast<unsigned int>(result.size()) - 1;
+        int pivot_value = result.at(partition_index);
         
-        const auto partition_value = input_elements.at(partition_index);
-        for (int value : input_elements) {
-            if (value < partition_value) {
-                result[lower_pos] = value;
-                lower_pos++;
-            } else if (value > partition_value) {
-                result[upper_pos] = value;
-                upper_pos--;
+        while (current < write_high) {
+            const auto current_value = result.at(current);
+            if (current_value > pivot_value) {
+                std::swap(result[current], result[write_high]);
+                write_high--;
+            } else if (current_value < pivot_value) {
+                if (current != write_low) {
+                    result[write_low] = result[current]; 
+                }
+                write_low++;
+                current++;
+            } else {
+                current++;
             }
-            // Ignore the case where value == partition. Will fill that in later
         }
         
-        // Fill in remaining elements with the pivot value
-        for (unsigned int i = lower_pos; i <= upper_pos; i++) {
-            result[i] = partition_value;
+        for (auto i = write_low; i < write_high; i++) {
+            result[i] = pivot_value;
         }
         
         return result;
