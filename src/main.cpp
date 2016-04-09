@@ -5,5 +5,6 @@
 int main() {
     Parity::test_parity();
     Flag::test();
+    Flag::test4();
     return 0;
 }

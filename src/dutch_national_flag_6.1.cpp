@@ -35,6 +35,66 @@ namespace Flag
         return result;
     }
     
+    std::vector<int> Partition4(const std::vector<int>& input_elements) {
+        std::vector<int> result = input_elements;
+        unsigned int next[4] = { 0, 0, 0, static_cast<unsigned int>(result.size()) };
+        unsigned int current = 0;
+
+        while (current < next[3]) {
+            std::cout << "{ ";
+            for (auto elem : result) {
+                std::cout << elem << ", ";
+            }
+            std::cout << "}" << std::endl;
+            std::cout << "next[0]: " << next[0] << std::endl;
+            std::cout << "next[1]: " << next[1] << std::endl;
+            std::cout << "next[2]: " << next[2] << std::endl;
+            std::cout << "next[3]: " << next[3] << std::endl;
+            std::cout << "current: " << current << std::endl;
+        
+            const auto value = result.at(current);
+            if (value == 0 && current == next[0]) {
+                current++;
+                next[0]++;
+                next[1] = std::max(next[0], next[1]);
+                next[2] = std::max(next[0], next[2]);
+            } else if (value == 1 && current == next[1]) {
+                current++;
+                next[1]++;
+                next[2] = std::max(next[1], next[2]);
+            } else if (value == 2 && current == next[2]) {
+                current++;
+                next[2]++;
+            } else if (value == 0 && current != next[0]) {
+                std::swap(result[current], result[next[0]]);
+                next[0]++;
+                next[1] = std::max(next[0], next[1]);
+                next[2] = std::max(next[0], next[2]);
+            } else if (value == 1 && current != next[1]) {
+                std::swap(result[current], result[next[1]]);
+                next[1]++;
+                next[2] = std::max(next[1], next[2]);
+            } else if (value == 2) {
+                std::swap(result[current], result[next[2]]);
+                next[2]++;
+            } else if (value == 3) {
+                std::swap(result[current], result[--next[3]]);
+            }
+        }
+        std::cout << "{ ";
+        for (auto elem : result) {
+            std::cout << elem << ", ";
+        }
+        std::cout << "}" << std::endl;
+        std::cout << "next[0]: " << next[0] << std::endl;
+        std::cout << "next[1]: " << next[1] << std::endl;
+        std::cout << "next[2]: " << next[2] << std::endl;
+        std::cout << "next[3]: " << next[3] << std::endl;
+        std::cout << "current: " << current << std::endl;
+            
+        return result;
+    }
+    
     void test() {
         const std::vector<int> input = { 1, 100, 12, 19, 2, 33, 45, 78, -1, 19 };
         const int pivot_index = 3;
@@ -74,6 +134,23 @@ namespace Flag
             after_pivot++;
         }
         TEST_EQ(4, after_pivot);
+    }
+    
+    void test4() {
+        const std::vector<int> input = { 0, 0, 1, 1, 1, 2, 3, 1, 2, 2, 3, 0, 0, 3, 0, 1, 2, 3, 0, 3 };
+        auto result = Partition4(input);
+        
+        TEST_EQ(input.size(), result.size());
+        
+        auto it = result.begin();
+        int count = 0;
+        for (auto val : {0, 1, 2, 3}) {
+            while ((*it) == val) {
+                count++;
+                it++;
+            }
+        }
+        TEST_EQ(static_cast<int>(result.size()), count);
         
         std::cout << "{ ";
         for (auto elem : result) {
