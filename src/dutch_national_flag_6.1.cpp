@@ -4,6 +4,8 @@
 
 namespace Flag
 {
+    static void ensure_next_indexes_valid(unsigned int next[4]);
+    
     std::vector<int> Partition(const std::vector<int>& input_elements, unsigned int partition_index) {
         std::vector<int> result = input_elements;
         
@@ -35,62 +37,30 @@ namespace Flag
         return result;
     }
     
+    void ensure_next_indexes_valid(unsigned int next[4]) {
+        next[1] = std::max(next[0], next[1]);
+        next[2] = std::max(next[1], next[2]);
+    }
+    
     std::vector<int> Partition4(const std::vector<int>& input_elements) {
         std::vector<int> result = input_elements;
         unsigned int next[4] = { 0, 0, 0, static_cast<unsigned int>(result.size()) };
         unsigned int current = 0;
 
         while (current < next[3]) {
-            std::cout << "{ ";
-            for (auto elem : result) {
-                std::cout << elem << ", ";
-            }
-            std::cout << "}" << std::endl;
-            std::cout << "next[0]: " << next[0] << std::endl;
-            std::cout << "next[1]: " << next[1] << std::endl;
-            std::cout << "next[2]: " << next[2] << std::endl;
-            std::cout << "next[3]: " << next[3] << std::endl;
-            std::cout << "current: " << current << std::endl;
-        
             const auto value = result.at(current);
-            if (value == 0 && current == next[0]) {
-                current++;
-                next[0]++;
-                next[1] = std::max(next[0], next[1]);
-                next[2] = std::max(next[0], next[2]);
-            } else if (value == 1 && current == next[1]) {
-                current++;
-                next[1]++;
-                next[2] = std::max(next[1], next[2]);
-            } else if (value == 2 && current == next[2]) {
-                current++;
-                next[2]++;
-            } else if (value == 0 && current != next[0]) {
-                std::swap(result[current], result[next[0]]);
-                next[0]++;
-                next[1] = std::max(next[0], next[1]);
-                next[2] = std::max(next[0], next[2]);
-            } else if (value == 1 && current != next[1]) {
-                std::swap(result[current], result[next[1]]);
-                next[1]++;
-                next[2] = std::max(next[1], next[2]);
-            } else if (value == 2) {
-                std::swap(result[current], result[next[2]]);
-                next[2]++;
-            } else if (value == 3) {
+            if (value == 3) {
                 std::swap(result[current], result[--next[3]]);
-            }
+            } else {
+                if (current == next[value]) {
+                    current++;
+                } else  {
+                    std::swap(result[current], result[next[value]]);
+                }
+                next[value]++;
+                ensure_next_indexes_valid(next); 
+            } 
         }
-        std::cout << "{ ";
-        for (auto elem : result) {
-            std::cout << elem << ", ";
-        }
-        std::cout << "}" << std::endl;
-        std::cout << "next[0]: " << next[0] << std::endl;
-        std::cout << "next[1]: " << next[1] << std::endl;
-        std::cout << "next[2]: " << next[2] << std::endl;
-        std::cout << "next[3]: " << next[3] << std::endl;
-        std::cout << "current: " << current << std::endl;
             
         return result;
     }
