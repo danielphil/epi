@@ -121,11 +121,5 @@ namespace Flag
             }
         }
         TEST_EQ(static_cast<int>(result.size()), count);
-        
-        std::cout << "{ ";
-        for (auto elem : result) {
-            std::cout << elem << ", ";
-        }
-        std::cout << "}" << std::endl;
     }
 }
